@@ -55,8 +55,41 @@ while True:
     except ValueError:
         print("invaild input")  # Catch int() exception
 
+MAXNUMOFSTOCK=4
+ticker = []
+counter = 0
+exist = False
+while True:
+    try:
+        if counter != MAXNUMOFSTOCK:
+            ticker_temp = []
+            test_data = []
+            print("Please enter the symbols for the stock(s) that you want to proceed(Max",MAXNUMOFSTOCK,")")
+            ticker_temp = input("(When you finish, please enter 'End' to exit):\n")
+            if ticker_temp in ticker:
+                exist = True
+                raise ValueError
+            if ticker_temp != "End":
+                test_data = yf.download(ticker_temp,"2018-01-09", "2018-01-11")
+                # print(test_data)
+                if len(test_data) > 0:
+                    ticker.append(ticker_temp)
+                    print('*****',ticker_temp,'added to the list.****')
+                    counter += 1  
+                else:
+                    raise ValueError
+            else:
+                break  
+        else:
+            break       
+    except ValueError:
+        print('*******THE SYMBOL YOU ENTER DOES NOT ASSOCIATED TO ANY STOCK**********')
+        print("Invaild ticker, try again:")  # Catch int() exception
 
-description = sa.descriptive(start_date, end_date, col_to_analysis)
+
+
+print(ticker)
+description = sa.descriptive(start_date, end_date, col_to_analysis,ticker)
 description.read_data()
 
 while True:

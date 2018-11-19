@@ -12,35 +12,31 @@ from datetime import datetime
 class descriptive:
 	data = None
 	df = None
+	tickers = None  
 
-	def __init__(self, start, end,col_to_analysis):
+	def __init__(self, start, end,col_to_analysis,ticker):
 		self.start_date = start
 		self.end_date = end
-		self.col=col_to_analysis
+		self.col = col_to_analysis
+		self.tickers = ticker
 		 
 
 
 	def plot(self):
-		
-		df2 = self.df.copy()
-		fig, ax = plt.subplots(figsize=(12, 6))
-		ax.plot(df2)
-		# df2.plot()
-		ax.grid()
-		code_name = {"AMZN": 'Amazon', "BABA": 'Alibaba'}
-		ax.legend(df2.columns.map(code_name))
-		ax.set_title('Stock Price Trends')
-		ax.set_xlim(self.start_date, self.end_date)
+		dataframe_df = pd.DataFrame(self.df)
+		plt.figure(figsize=(10,6))
+		plt.plot(dataframe_df.index, dataframe_df)
+		plt.xlabel("Date")
+		plt.ylabel("Price")
+		plt.legend(self.tickers)
 		plt.show()
+
 		
 	def read_data(self):
-		tickers = ["AMZN", "BABA"]
-		self.data = yf.download(tickers=tickers,
-								start=self.start_date, end=self.end_date)
-		self.df = self.data[self.col]  # could be
-		# changed into open, high, low data
+		self.data = yf.download(self.tickers,
+								start	=self.start_date, end=self.end_date)
+		self.df = self.data[self.col]
 		print(self.df)
-		# self.df.plot()
 
 	def print_descriptive(self):
 		data_describe = pd.DataFrame(self.df)
